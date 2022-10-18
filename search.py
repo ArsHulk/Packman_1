@@ -87,24 +87,69 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    st=util.Stack()
-    x=problem.getSuccessors(problem.getStartState())
-    for state,dir,cost in x:
-        st.push(state)
-    x=st.pop()
-    print(x)
-    i=0
-    while(problem.isGoalState(x)!=True and i<20):    
-        print(problem.getSuccessors(x))
-        for state,dir,cost in problem.getSuccessors(x):
-            st.push(state)
-        x=st.pop()
-        print("going to: ", x)
-        i+=1
+    #st=util.Stack()
+    #stdir=util.Stack()
+    #x=problem.getSuccessors(problem.getStartState())
+    #direction=[]
+    #for state,dir,cost in x:
+    #    st.push(state)
+    #    stdir.push(dir)
+    #direction.append(stdir.pop())
+    #x=st.pop()
+    #print(x)
+    #i=0
+    #passedby=[]
+    #passedby.append(x)
+    #while(problem.isGoalState(x)!=True and i<20):    
+    #    print(problem.getSuccessors(x))
+    #    for state,dir,cost in problem.getSuccessors(x):
+    #        if state not in passedby:
+    #            st.push(state)
+    #            stdir.push(dir)
+    #    direction.append(stdir.pop())
+    #    print(problem.getCostOfActions(direction))
+    #    x=st.pop()
+    #    passedby.append(x)
+    #    print("going to: ", x, " with direciton to", dir)
+    #    i+=1
+    #if problem.isGoalState(x)==True: print("found it")
+    #print("passed by ", passedby)
+    #st.push(5)
+    #print(st.pop())
+    #print(direction)
+   
     
-    st.push(5)
-    print(st.pop())
+    print("test")
+    st=util.Stack()
+    passedby=[]
+    direction=[]
+    if(problem.isGoalState(problem.getStartState())):
+        return direction
+    st.push((problem.getStartState(),[]))
+    while(True):
+        if st.isEmpty():
+            return []
+        x,direction=st.pop()
+        print(x)
+        passedby.append(x)
+        if problem.isGoalState(x):
+            return direction
+        
+        temp=problem.getSuccessors(x)
+        for part in temp:
+            if part[0] not in passedby:
+                print(direction)
+                newdirection=direction + [part[1]]
+                print("new ", newdirection)
+                st.push((part[0],newdirection))
     util.raiseNotDefined()
+    
+    
+    
+    
+    
+    
+    
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
