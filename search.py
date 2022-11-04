@@ -126,9 +126,9 @@ def breadthFirstSearch(problem: SearchProblem):
             return direction
 
         temp=problem.getSuccessors(x)
-        if temp:
-            for part in temp:
-                if part[0] not in passedby and part[0] not in (sta[0] for sta in st.list):
+        for part in temp:
+            if part[0] not in passedby:
+                if part[0] not in (sta[0] for sta in st.list):
                     st.push((part[0],direction + [part[1]]))
                 
 def uniformCostSearch(problem: SearchProblem):
@@ -154,7 +154,8 @@ def uniformCostSearch(problem: SearchProblem):
         for part in temp:
             if part[0] not in passedby and part[0] not in (sta[2][0] for sta in st.heap):
                 st.push((part[0],direction + [part[1]]),problem.getCostOfActions(direction + [part[1]]))      
-            elif part[0] not in passedby and (part[0] in (sta[2][0] for sta in st.heap)):
+            elif part[0] not in passedby:
+                if part[0] in (sta[2][0] for sta in st.heap):
                     for sta in st.heap:
                         if sta[2][0] == part[0]:
                             oldPri = problem.getCostOfActions(sta[2][1])
