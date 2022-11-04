@@ -87,18 +87,18 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    st=util.Stack()
-    passedby=[]
-    direction=[]
+    st=util.Stack()   #stack=(coordinates,path)
+    passedby=[]     #visited
+    direction=[]    #hot to get to every state
     if(problem.isGoalState(problem.getStartState())):
         return direction
-    st.push((problem.getStartState(),[]))
+    st.push((problem.getStartState(),[])) #beggining
     while(True):
         if st.isEmpty():
             return []
-        x,direction=st.pop()
+        x,direction=st.pop() #position and path of current state
         passedby.append(x)
-        if problem.isGoalState(x):
+        if problem.isGoalState(x): #if goal is found end 
             return direction
         
         temp=problem.getSuccessors(x)
@@ -159,7 +159,6 @@ def uniformCostSearch(problem: SearchProblem):
                     for sta in st.heap:
                         if sta[2][0] == part[0]:
                             oldPri = problem.getCostOfActions(sta[2][1])
-                        
                         newPri = problem.getCostOfActions(direction + [part[1]])
                         if oldPri > newPri and oldPri!=-1:
                             st.update((part[0],direction + [part[1]]),newPri)
@@ -175,7 +174,27 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    st=util.PriorityQueue()
+    passedby=[]
+    direction=[]
+    st.push((problem.getStartState(), []), 0)
+    if(problem.isGoalState(problem.getStartState())):
+        return []
+    while(True):
+        if st.isEmpty():
+            return []
+        x,direction=st.pop()
+        if x in passedby:
+            continue
+        passedby.append(x)
+        if problem.isGoalState(x):
+            return direction
+        temp=problem.getSuccessors(x)
+        for part in temp:
+            if part[0] not in passedby:
+                    st.push((part[0],direction + [part[1]]),heuristic)
+
+
 
 
 # Abbreviations
