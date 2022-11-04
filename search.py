@@ -87,39 +87,6 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    #st=util.Stack()
-    #stdir=util.Stack()
-    #x=problem.getSuccessors(problem.getStartState())
-    #direction=[]
-    #for state,dir,cost in x:
-    #    st.push(state)
-    #    stdir.push(dir)
-    #direction.append(stdir.pop())
-    #x=st.pop()
-    #print(x)
-    #i=0
-    #passedby=[]
-    #passedby.append(x)
-    #while(problem.isGoalState(x)!=True and i<20):    
-    #    print(problem.getSuccessors(x))
-    #    for state,dir,cost in problem.getSuccessors(x):
-    #        if state not in passedby:
-    #            st.push(state)
-    #            stdir.push(dir)
-    #    direction.append(stdir.pop())
-    #    print(problem.getCostOfActions(direction))
-    #    x=st.pop()
-    #    passedby.append(x)
-    #    print("going to: ", x, " with direciton to", dir)
-    #    i+=1
-    #if problem.isGoalState(x)==True: print("found it")
-    #print("passed by ", passedby)
-    #st.push(5)
-    #print(st.pop())
-    #print(direction)
-   
-    
-    print("test")
     st=util.Stack()
     passedby=[]
     direction=[]
@@ -130,7 +97,6 @@ def depthFirstSearch(problem: SearchProblem):
         if st.isEmpty():
             return []
         x,direction=st.pop()
-        print(x)
         passedby.append(x)
         if problem.isGoalState(x):
             return direction
@@ -138,11 +104,9 @@ def depthFirstSearch(problem: SearchProblem):
         temp=problem.getSuccessors(x)
         for part in temp:
             if part[0] not in passedby:
-                print(direction)
                 newdirection=direction + [part[1]]
-                print("new ", newdirection)
                 st.push((part[0],newdirection))
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
     
     
     
@@ -153,13 +117,63 @@ def depthFirstSearch(problem: SearchProblem):
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    st=util.Queue()
+    passedby=[]
+    direction=[]
+    if(problem.isGoalState(problem.getStartState())):
+        return direction
+    st.push((problem.getStartState(),[]))
+    while(True):
+        if st.isEmpty():
+            return []
+        x,direction=st.pop()
+        passedby.append(x)
+        
+        if problem.isGoalState(x):
+            return direction
 
+        temp=problem.getSuccessors(x)
+        if temp:
+            for part in temp:
+                if part[0] not in passedby and part[0] not in (state[0] for state in st.list):
+                    newdirection=direction + [part[1]]
+                    st.push((part[0],newdirection))
+                
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    st=util.PriorityQueue()
+    passedby=[]
+    direction=[]
+    oldPri=0
+    if(problem.isGoalState(problem.getStartState())):
+        return direction
+    st.push((problem.getStartState(),[]),0)
+    while(True):
+        if st.isEmpty():
+            return []
+        x,direction=st.pop()
+        passedby.append(x)
+        
+        if problem.isGoalState(x):
+            return direction
+
+        temp=problem.getSuccessors(x)
+        if temp:
+            for part in temp:
+                if part[0] not in passedby and part[0] not in (state[2][0] for state in st.heap):
+                    newdirection=direction + [part[1]]
+                    st.push((part[0],newdirection),problem.getCostOfActions(newdirection))      
+                elif part[0] not in passedby and (part[0] in (state[2][0] for state in st.heap)):
+                        for state in st.heap:
+                            if state[2][0] == part[0]:
+                                oldPri = problem.getCostOfActions(state[2][1])
+                                
+                            newPri = problem.getCostOfActions(direction + [part[1]])
+                            if oldPri > newPri:
+                                newPath = direction + [part[1]]
+                                st.update((part[0],newdirection),newPri)
+
 
 def nullHeuristic(state, problem=None):
     """
