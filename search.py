@@ -104,15 +104,8 @@ def depthFirstSearch(problem: SearchProblem):
         temp=problem.getSuccessors(x)
         for part in temp:
             if part[0] not in passedby:
-                newdirection=direction + [part[1]]
-                st.push((part[0],newdirection))
+                st.push((part[0],direction + [part[1]]))
     #util.raiseNotDefined()
-    
-    
-    
-    
-    
-    
     
 
 def breadthFirstSearch(problem: SearchProblem):
@@ -135,9 +128,8 @@ def breadthFirstSearch(problem: SearchProblem):
         temp=problem.getSuccessors(x)
         if temp:
             for part in temp:
-                if part[0] not in passedby and part[0] not in (state[0] for state in st.list):
-                    newdirection=direction + [part[1]]
-                    st.push((part[0],newdirection))
+                if part[0] not in passedby and part[0] not in (sta[0] for sta in st.list):
+                    st.push((part[0],direction + [part[1]]))
                 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
@@ -145,7 +137,6 @@ def uniformCostSearch(problem: SearchProblem):
     st=util.PriorityQueue()
     passedby=[]
     direction=[]
-    oldPri=0
     if(problem.isGoalState(problem.getStartState())):
         return direction
     st.push((problem.getStartState(),[]),0)
@@ -159,20 +150,18 @@ def uniformCostSearch(problem: SearchProblem):
             return direction
 
         temp=problem.getSuccessors(x)
-        if temp:
-            for part in temp:
-                if part[0] not in passedby and part[0] not in (state[2][0] for state in st.heap):
-                    newdirection=direction + [part[1]]
-                    st.push((part[0],newdirection),problem.getCostOfActions(newdirection))      
-                elif part[0] not in passedby and (part[0] in (state[2][0] for state in st.heap)):
-                        for state in st.heap:
-                            if state[2][0] == part[0]:
-                                oldPri = problem.getCostOfActions(state[2][1])
-                                
-                            newPri = problem.getCostOfActions(direction + [part[1]])
-                            if oldPri > newPri:
-                                newPath = direction + [part[1]]
-                                st.update((part[0],newdirection),newPri)
+        oldPri=-1
+        for part in temp:
+            if part[0] not in passedby and part[0] not in (sta[2][0] for sta in st.heap):
+                st.push((part[0],direction + [part[1]]),problem.getCostOfActions(direction + [part[1]]))      
+            elif part[0] not in passedby and (part[0] in (sta[2][0] for sta in st.heap)):
+                    for sta in st.heap:
+                        if sta[2][0] == part[0]:
+                            oldPri = problem.getCostOfActions(sta[2][1])
+                        
+                        newPri = problem.getCostOfActions(direction + [part[1]])
+                        if oldPri > newPri and oldPri!=-1:
+                            st.update((part[0],direction + [part[1]]),newPri)
 
 
 def nullHeuristic(state, problem=None):
